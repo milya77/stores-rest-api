@@ -12,10 +12,11 @@ from db import db
 
 app = Flask(__name__)
 # database is going to live in our root folder of our project
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'jose'
-api = Api(app)
+with app.app_context():
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.secret_key = 'jose'
+    api = Api(app)
 
 # SQLAlchemy will create tables unless they exist already
 # Flask decorator. It is going to run this method before
