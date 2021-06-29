@@ -8,23 +8,13 @@ from resources.user import UserRegister
 # "item" just a name of the file
 from resources.item import Item, ItemList
 from resources.store import Store, StoreList
-from db import db
 
 app = Flask(__name__)
 # database is going to live in our root folder of our project
-with app.app_context():
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.secret_key = 'jose'
-    api = Api(app)
-
-# SQLAlchemy will create tables unless they exist already
-# Flask decorator. It is going to run this method before
-# the first request to this app
-# it does create tables that it sees. so it does go through the imports
-@app.before_first_request
-def create_tables():
-    db.create_all()
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = 'jose'
+api = Api(app)
 
 jwt = JWT(app, authenticate, identity) # /auth
 
@@ -47,5 +37,6 @@ api.add_resource(UserRegister, '/register')
 #and the file name is always __main__
 #so only the file you run is __main__. if it is not main then that means we have imported this file from elsewhere
 if __name__ == '__main__':
+    from db import db
     db.init_app(app)
     app.run(port=5000, debug=True)
